@@ -13,7 +13,7 @@ namespace TD{
         }
 
         void recieve_damage(const float& damage){
-            m_health_points -= (damage < m_health_points) ? damage : 0;
+            m_health_points -= std::min(damage, m_health_points);
         }
 
         bool is_destroyed() const{ 

@@ -33,6 +33,7 @@ namespace TD{
 
         void set_target(Attacker * attacker){
             // m_target_id = attacker->get_id();
+            attacker;
             m_reload_clock.restart();
             m_body.setPosition({500,500});
             m_body.setSize({100,100});
@@ -41,7 +42,7 @@ namespace TD{
         }
 
 
-        float get_distance(const Attacker target) const{
+        float get_distance(const Attacker& target) const{
             const auto xy_distance = target.get_position() - m_body.getPosition();
             return std::sqrtf((xy_distance.x * xy_distance.x) + (xy_distance.y * xy_distance.y));
         }
@@ -70,7 +71,7 @@ namespace TD{
 
             m_target_id = found_target->get_id();
             rotate_to_position(found_target->get_position());
-            if(m_reload_clock.getElapsedTime().asSeconds() > 0.5F){
+            if(m_reload_clock.getElapsedTime().asSeconds() > 0.5f){
                 m_reload_clock.restart();
                 std::cout<<"Poef"<<std::endl;
             }

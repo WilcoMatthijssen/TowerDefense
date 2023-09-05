@@ -2,16 +2,19 @@ cmake_minimum_required(VERSION 3.21)
 project(TowerDefenseProject LANGUAGES CXX)
 
 
-set(CMAKE_CXX_CLANG_TIDY
-  clang-tidy;
-  -checks=*;
-  -warnings-as-errors=*;)
-
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
+
+# if (MSVC)
+#     # warning level 4 and all warnings as errors
+#     add_compile_options(/W4 /WX)
+# else()
+#     # lots of warnings and all warnings as errors
+#     add_compile_options(-Wall -Wextra -pedantic -Werror)
+# endif()
 
 
 add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)

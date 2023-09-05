@@ -6,6 +6,9 @@
 #include <TD_attacker.hpp>
 #include <filesystem>
 
+#include <ranges>
+#include <fstream>
+#include <unordered_map>
 
 int main()
 {
@@ -18,8 +21,6 @@ int main()
     TD::Tower_defense td;
 
     td.start();
-    
-
     // TD::Map m;
     // std::vector<TD::Attacker> a;
     // a.resize(1);
@@ -49,11 +50,15 @@ int main()
 
         for (auto event = sf::Event{}; window.pollEvent(event);)
         {
-            if (event.type == sf::Event::Closed)
+            switch(event.type)
             {
-                window.close();
+                case sf::Event::Closed:
+                    window.close();
+                    break;
             }
         }
         window.clear();
     }
+    
+ 
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <tuple>
+#include <string>
 
 #include <TD_attacker.hpp>
 #include <TD_defender.hpp>
@@ -17,12 +19,12 @@ namespace TD{
         std::vector<Attacker> m_attackers;
 
         size_t m_current_wave_number;
-        size_t m_amount_of_waves;
+        std::vector<std::tuple<std::string, size_t>> waves;
 
 
     public:
         void draw(sf::RenderWindow& window) const{
-            m_map.draw(window);
+            m_map  .draw(window);
             m_tower.draw(window);
 
             for(const auto& attacker: m_attackers){
@@ -39,9 +41,13 @@ namespace TD{
                 attacker.update();
             }
 
-             for(auto& defender: m_defenders){
+            for(auto& defender: m_defenders){
                 defender.update(m_attackers);
             }
+        }
+
+        void attacker_spawn_routine(){
+
         }
         
         void start(){

@@ -1,5 +1,4 @@
-#ifndef TD_DEFENDER_HPP
-#define TD_DEFENDER_HPP
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -89,4 +88,3 @@ namespace TD{
         }
     };
 };
-#endif

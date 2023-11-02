@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TD_MAP_HPP
+#define TD_MAP_HPP
 #include <SFML/Graphics.hpp>
 #include <vector>
 
@@ -9,7 +10,7 @@ namespace TD{
         sf::Vector2f m_position;
         sf::Vector2f m_size;
         size_t m_row_size;
-        std::vector<sf::Vector2f> m_route{{100,100},{100,900},{900,300},{100,400},{100,100},{100,900},{900,300},{100,400},{100,100},{100,900},{900,300},{100,400}};
+        std::vector<sf::Vector2f> m_route{{1000,1000},{100,900},{900,300},{100,400},{100,100},{100,900},{900,300},{100,400},{100,100},{100,900},{900,300},{100,400}};
 
         void update_tile_size_and_position(){
             for(size_t i = 0; i < m_tiles.size(); ++i){
@@ -22,7 +23,6 @@ namespace TD{
         }
          
     public:
-
 
         void draw(sf::RenderWindow& window) const{
             for(const auto& tile: m_tiles){
@@ -52,3 +52,4 @@ namespace TD{
         }
     };
 };
+#endif

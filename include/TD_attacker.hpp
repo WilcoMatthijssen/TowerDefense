@@ -11,12 +11,11 @@
 #include <source_location>
 
 
-
 namespace TD{
     class Attacker{
         sf::RectangleShape m_body;
-        float m_health_points;
-        float m_speed;
+        float m_health_points=560;
+        float m_speed= 10;
         float m_attack_damage;
         sf::Clock m_clock;
         const std::vector<sf::Vector2f> * m_route;
@@ -41,7 +40,10 @@ namespace TD{
         sf::Vector2f get_position() const{
            return m_body.getPosition(); 
         }
+        sf::FloatRect get_global_bounds(){
 
+            return m_body.getGlobalBounds();
+        }
         bool is_dead() const{ 
             return m_health_points == 0; 
         }
@@ -77,20 +79,27 @@ namespace TD{
             }
 
             const auto diff = m_body.getPosition() - m_route->at(m_current_route_index);
-            if(diff.x != 0){
-                float x_delta = (steps < abs(diff.x)) ? steps : abs(diff.x);
-                steps -= x_delta;
-                x_delta *= (diff.x <= 0.f) ? 1.f : -1.f;
-                m_body.move({x_delta, 0});
-                m_body.setRotation((diff.x < 0.f) ? 0.f : 180.f);
+
+            float x_delta = abs(diff.x);
+            if(x_delta != 0){
+                x_delta = std::min(steps, x_delta);
+                steps  -= x_delta;
+                x_delta = (diff.x <= 0) ? x_delta : -x_delta;
+
+                m_body.move(x_delta, 0);
+                m_body.setRotation((diff.x < 0) ? 0 : 180);
             }
-            else if(diff.y != 0){
-                float y_delta = (steps < abs(diff.y)) ? steps : abs(diff.y);
-                steps -= y_delta;
-                y_delta *= (diff.y <= 0) ? 1 : -1;
-                m_body.move({0, y_delta});
-                m_body.setRotation((diff.y < 0.f) ? 90.f : 270.f);
+
+            float y_delta = abs(diff.y);
+            if(((steps != 0) && y_delta != 0)){
+                y_delta = std::min(steps, y_delta);
+                steps  -= y_delta;
+                y_delta = (diff.y <= 0) ? y_delta : -y_delta;
+
+                m_body.move(0, y_delta);
+                m_body.setRotation((diff.y < 0) ? 90 : 270);
             }
+            
             
             if(steps != 0){
                 ++m_current_route_index;
@@ -104,9 +113,9 @@ namespace TD{
 
         void update(){
 
-            std::cout<<std::source_location::current().line()<<std::endl;
+            // std::cout<<std::source_location::current().line()<<std::endl;
             const float elapsed_seconds = m_clock.restart().asSeconds();
-            move_to_route_target(elapsed_seconds * m_body.getSize().x * 10);
+            move_to_route_target(elapsed_seconds * m_body.getSize().x * m_speed);
             animate(elapsed_seconds);
         }
 

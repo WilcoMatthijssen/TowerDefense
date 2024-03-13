@@ -1,14 +1,7 @@
-#include <SFML/Graphics.hpp>
 #include "tower_defense.hpp"
-#include <ranges>
-#include <iostream>
-#include <TD_map.hpp>
-#include <TD_attacker.hpp>
-#include <filesystem>
+#include <SFML/Graphics.hpp>
 
-#include <ranges>
-#include <fstream>
-#include <unordered_map>
+
 
 int main(){
     auto window = sf::RenderWindow{ { 1920u, 1080u }, "Tower Defense" };
@@ -16,13 +9,13 @@ int main(){
     window.setFramerateLimit(144);
     TD::Tower_defense td;
     td.start();
-
-    // std::cout<<std::filesystem::current_path()<<std::endl;
-
+    TD::Fileparser f;
+    f.load();
 
     while (window.isOpen()){
         td.update();
         td.draw(window);
+        td.attacker_spawn_routine();
 
         window.display();
 
@@ -31,7 +24,18 @@ int main(){
                 case sf::Event::Closed:
                     window.close();
                     break;
-            }
+                case sf::Event::MouseButtonPressed:
+                // Check if the event is a mouse button press
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    // Handle left mouse button click
+                    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+                    td.place_turret(sf::Vector2f(mousePosition.x, mousePosition.y));
+                }
+                break;
+                default:
+                    break;
+            }   
         }
         window.clear();
     }

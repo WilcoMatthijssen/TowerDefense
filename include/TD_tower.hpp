@@ -4,6 +4,7 @@
 
 namespace TD{
     class Tower{
+    private:
         sf::RectangleShape m_body;
         float m_health_points;
 

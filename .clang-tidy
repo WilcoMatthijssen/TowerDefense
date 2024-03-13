@@ -1,0 +1,6 @@
+Checks: '
+  -*,
+  clang-analyzer-deadcode.DeadStores,
+  misc-unused-parameters,
+  bugprone-unused-return-value,
+  bugprone-unused-local-non-trivial-variable'

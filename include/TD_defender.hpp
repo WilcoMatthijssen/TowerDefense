@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <TD_attacker.hpp>
+#include "TD_attacker.hpp"
 #include <algorithm>
 #include <math.h>
 #include <numbers>
@@ -10,35 +10,46 @@
 #include <ranges>
 namespace TD{
     class Defender{
+    private:
         sf::RectangleShape m_body;
-        float m_attack_damage= 5;
-        float m_speed =5;
-        size_t m_target_id = 0;
+        double m_attack_damage= 5;
+        double m_range = 7420;
+
+        sf::Time m_reloadspeed = sf::seconds(0.05);
         sf::Clock m_reload_clock;
-        float m_range = 69420;
 
-
+        size_t m_target_id = 0;
+        size_t m_id;
     public:
-        Defender(){
-
-            m_reload_clock.restart();
-            m_body.setPosition({500,500});
-            m_body.setSize({100,100});
+        Defender(sf::Vector2f pos, size_t id): m_id{id}, m_body{{80,80}}{
+            // m_reload_clock.restart();
+            m_body.setPosition(pos);
             m_body.setFillColor(sf::Color::Cyan);
-            m_body.setOrigin({50,50});
+            m_body.setOrigin({40,40});
         }
-         sf::Vector2f get_position() const{
-           return m_body.getPosition(); 
+
+        size_t get_id() { 
+            return m_id;
         }
-        void draw(sf::RenderWindow& window) const {
+
+        bool is_selected(sf::Vector2f point){
+            return m_body.getGlobalBounds().contains(point.x, point.y);
+         }
+
+        sf::Vector2f get_position() const {
+            return m_body.getPosition();
+        }
+
+        void draw(sf::RenderWindow &window) const {
             window.draw(m_body);
         }
 
-        float get_damage(){
+        double get_damage(){
             return m_attack_damage;
         }
+
         float get_speed(){
-            return m_speed;
+            return m_reloadspeed.asSeconds();
         }
 
         void attack(Attacker& attacker){
@@ -53,18 +64,18 @@ namespace TD{
 
         void update(std::vector<Attacker>& targets, std::vector<Bullet>& bullets){
             auto found_target = targets.end();
-            float min_range = m_range;
+            double min_range = m_range;
             
-            for(auto target = targets.begin(); target < targets.end(); ++target){
-                if ((target->get_id() == m_target_id) && (get_distance(*target) < m_range)){
-                    found_target = target;
+            for(auto target_it = targets.begin(); target_it < targets.end(); ++target_it){
+                if ((target_it->get_id() == m_target_id) && (get_distance(*target_it) < m_range)){
+                    found_target = target_it;
                     break;
                 }
 
-                const float distance = get_distance(*target);
+                const double distance = get_distance(*target_it);
                 if(distance < min_range){
                     min_range = distance;
-                    found_target = target;
+                    found_target = target_it;
                 }
             }
 
@@ -74,16 +85,16 @@ namespace TD{
 
             m_target_id = found_target->get_id();
             rotate_to_position(found_target->get_position());
-            if(m_reload_clock.getElapsedTime().asSeconds() > 0.050f){
+            if(m_reload_clock.getElapsedTime() > m_reloadspeed){
                 m_reload_clock.restart();
-                bullets.push_back(Bullet(1, m_attack_damage, get_position(), found_target->get_position()));
+                bullets.emplace_back(1, m_attack_damage, get_position(), found_target->get_position());
             }
         }
 
 
         void rotate_to_position(const sf::Vector2f& position){
             const sf::Vector2f xy_diff = position - m_body.getPosition();
-            const float rotation = atan2(xy_diff.y, xy_diff.x) * 180 / std::numbers::pi;
+            const double rotation = atan2(xy_diff.y, xy_diff.x) * 180 / std::numbers::pi;
             m_body.setRotation(rotation + 180);
         }
     };

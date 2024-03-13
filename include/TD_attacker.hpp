@@ -6,122 +6,54 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <TD_tower.hpp>
+#include <TD_fileparser.hpp>
 #include <array>
 #include <iostream>
-#include <source_location>
-
-
+#include <numbers>
+#include <algorithm>
+#include <stack>
 namespace TD{
-    class Attacker{
-        sf::RectangleShape m_body;
-        float m_health_points=560;
-        float m_speed= 10;
-        float m_attack_damage;
-        sf::Clock m_clock;
-        const std::vector<sf::Vector2f> * m_route;
-        size_t m_current_route_index;
+class Attacker{
+private:
+    sf::RectangleShape m_body;
+    float m_health_points=100;
+    float m_speed= 10;
+    float m_attack_damage;
+    sf::Clock m_clock;
+    const std::vector<sf::Vector2f> * m_route;
+    size_t m_current_route_index;
 
-        sf::Texture text;
+    sf::Texture text;
 
-        size_t m_id = 1;
+    size_t m_id = 1;
 
-    public:
+public:
 
-        size_t get_id() const{
-            return m_id;
-        }
-        
-        void set_route(const std::vector<sf::Vector2f> *const route){
-            m_route = route;
-            m_current_route_index = 0;
-            m_body.setPosition(m_route->front());
-        }
+    size_t get_id() const;
+    
+    void set_route(const std::vector<sf::Vector2f> *const route);
 
-        sf::Vector2f get_position() const{
-           return m_body.getPosition(); 
-        }
-        sf::FloatRect get_global_bounds(){
+    sf::Vector2f get_position() const;
 
-            return m_body.getGlobalBounds();
-        }
-        bool is_dead() const{ 
-            return m_health_points == 0; 
-        }
+    sf::FloatRect get_global_bounds();
 
-        void attack(Tower& tower){
-            tower.recieve_damage(m_attack_damage);
-        }
+    bool is_dead() const;
 
-        void recieve_damage(const float damage){
-            m_health_points -= std::min(damage, m_health_points);
-        }
+    void attack(Tower& tower);
 
-        void configure_stats(const float& health_points, const float& attack_damage, const float& speed){
-     
-            m_health_points = health_points;
-            m_attack_damage = attack_damage;
-            m_speed         = speed;
-        }
+    void recieve_damage(const float damage);
 
-        void configure(const sf::Vector2f size){
-            m_body.setSize(size);
-            m_body.setOrigin(size / 2.0F);
-            // m_body.setFillColor(sf::Color::Magenta);
-            m_clock.restart();
+    void configure_stats(const float& health_points, const float& attack_damage, const float& speed);
 
-            text.loadFromFile("../../assets/walking.png");
-            m_body.setTexture(&text);
-        }
+    void configure(sf::Vector2f size, Fileparser &fp);
+    
+    void move_to_route_target(float steps);
 
-        void move_to_route_target(float steps){
-            if(m_current_route_index == m_route->size()){
-                return;
-            }
+ 
+    void animate(const float elapsed_seconds);
+    void update();
 
-            const auto diff = m_body.getPosition() - m_route->at(m_current_route_index);
-
-            float x_delta = abs(diff.x);
-            if(x_delta != 0){
-                x_delta = std::min(steps, x_delta);
-                steps  -= x_delta;
-                x_delta = (diff.x <= 0) ? x_delta : -x_delta;
-
-                m_body.move(x_delta, 0);
-                m_body.setRotation((diff.x < 0) ? 0 : 180);
-            }
-
-            float y_delta = abs(diff.y);
-            if(((steps != 0) && y_delta != 0)){
-                y_delta = std::min(steps, y_delta);
-                steps  -= y_delta;
-                y_delta = (diff.y <= 0) ? y_delta : -y_delta;
-
-                m_body.move(0, y_delta);
-                m_body.setRotation((diff.y < 0) ? 90 : 270);
-            }
-            
-            
-            if(steps != 0){
-                ++m_current_route_index;
-                move_to_route_target(steps);
-            }
-        }
-
-        void animate(const float elapsed_seconds){
-            elapsed_seconds;
-        }
-
-        void update(){
-
-            // std::cout<<std::source_location::current().line()<<std::endl;
-            const float elapsed_seconds = m_clock.restart().asSeconds();
-            move_to_route_target(elapsed_seconds * m_body.getSize().x * m_speed);
-            animate(elapsed_seconds);
-        }
-
-        void draw(sf::RenderWindow& window) const{
-            window.draw(m_body);
-        }
-    };
+    void draw(sf::RenderWindow& window) const;
+};
 };
 #endif

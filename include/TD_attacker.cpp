@@ -15,7 +15,6 @@ namespace TD{
 
     size_t Attacker::get_id() const{
         return m_id;
-        
     }
 
     
@@ -42,8 +41,9 @@ namespace TD{
         tower.recieve_damage(m_attack_damage);
     }
 
-    void Attacker::recieve_damage(const float damage){
+    float Attacker::recieve_damage(const float damage){
         m_health_points -= std::min(damage, m_health_points);
+        return is_dead() ? 0 : m_reward;
     }
 
     void Attacker::configure_stats(const float& health_points, const float& attack_damage, const float& speed){

@@ -127,6 +127,10 @@ namespace TD{
         const std::vector<sf::Vector2f>& get_route(){
             return m_route;
         }
+
+        sf::Vector2f get_total_size(){
+            return {m_size.x * m_row_size, m_size.y * (m_tiles.size()/ m_row_size)};
+        }
     };
 };
 #endif

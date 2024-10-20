@@ -34,7 +34,7 @@ int main(){
                 }
                 break;
                 default:
-                    break;
+                    continue;
             }   
         }
         window.clear();

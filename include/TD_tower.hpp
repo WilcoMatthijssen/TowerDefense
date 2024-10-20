@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <TD_fileparser.hpp>
 #include <vector>
 
 namespace TD{
@@ -9,6 +10,13 @@ namespace TD{
         float m_health_points;
 
     public:
+        void configure(sf::Vector2f size, Fileparser &fp){
+            m_body.setSize(size);
+            m_body.setOrigin(m_body.getSize() / 2.0F);
+            m_body.setTexture(fp.get_texture("../assets/walking.png"));
+        }
+
+
         void draw(sf::RenderWindow& window) const {
             window.draw(m_body);
         }
@@ -19,6 +27,10 @@ namespace TD{
 
         bool is_destroyed() const{ 
             return m_health_points <= 0; 
+        }
+
+        void set_postition(const sf::Vector2f position){
+            m_body.setPosition(position);
         }
     };
 };

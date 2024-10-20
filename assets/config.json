@@ -19,12 +19,36 @@
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
       ]
     },
-    "towers": [
-      {"id": 1, "type": "basic", "position": [2, 2]},
-      {"id": 2, "type": "sniper", "position": [5, 4]}
+    "defenders": [
+      {
+        "firerate": 1,
+        "damage": 100,
+        "range":10,
+        "type": "basic",
+        "texture": "../assets/place_texture.jpg"
+      },
+      {
+        "firerate": 2,
+        "damage": 100,
+        "range":10,
+        "type": "sniper",
+        "texture": "../assets/place_texture.jpg"
+      }
     ],
     "attackers": [
-      {"id": 101, "type": "enemyA", "position": [0, 1]},
-      {"id": 102, "type": "enemyB", "position": [0, 2]}
+      {
+        "speed": 101,
+        "damage": 100,
+        "health": 100,
+        "type": "enemyA",
+        "texture": "../assets/place_texture.jpg"
+      },
+      {
+        "speed": 102,
+        "damage": 100,
+        "health": 100,
+        "type": "enemyB",
+        "texture": "../assets/place_texture.jpg"
+      }
     ]
   }

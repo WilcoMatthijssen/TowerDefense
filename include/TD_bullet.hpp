@@ -3,6 +3,7 @@
 
 // #include <TD_defender.hpp>
 #include "TD_attacker.hpp"
+#include "TD_controlmenu.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
@@ -36,20 +37,20 @@ namespace TD{
             m_body.move(distance * std::cos(m_direction), distance * std::sin(m_direction));
         }
 
-        bool check_collission(std::vector<Attacker> &attackers){
+        bool check_collission(std::vector<Attacker> &attackers, ConfigMenu& menu){
             bool hit = false;
             std::erase_if(attackers, [&](auto &attacker){
                 if(!hit && attacker.get_global_bounds().intersects(m_body.getGlobalBounds())){
-                attacker.recieve_damage(m_damage);
-                hit = true;
+                    menu.add_money(attacker.recieve_damage(m_damage));
+                    hit = true;
                 }
                 return attacker.is_dead(); });
             return hit;
         }
 
-        bool update(std::vector<Attacker> &attackers){
+        bool update(std::vector<Attacker> &attackers, ConfigMenu& menu){
             move();
-            return check_collission(attackers) || (m_distance > 2000);
+            return check_collission(attackers, menu) || (m_distance > 2000);
         }
 
         void draw(sf::RenderWindow &window) const{

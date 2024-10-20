@@ -24,7 +24,7 @@ private:
     size_t m_current_route_index;
 
     sf::Texture text;
-
+float m_reward = 10;
     size_t m_id = 1;
 
 public:
@@ -41,7 +41,7 @@ public:
 
     void attack(Tower& tower);
 
-    void recieve_damage(const float damage);
+    float recieve_damage(const float damage);
 
     void configure_stats(const float& health_points, const float& attack_damage, const float& speed);
 

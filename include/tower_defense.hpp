@@ -12,13 +12,15 @@
 #include "TD_map.hpp"
 #include "TD_fileparser.hpp"
 #include "TD_bullet.hpp"
-
+#include "TD_controlmenu.hpp"
 
 namespace TD{
     class Tower_defense{
     private:
         Map m_map;
         Tower m_tower;
+        ConfigMenu m_menu;
+
         std::vector<Defender> m_defenders;
         std::vector<Attacker> m_attackers;
         std::vector<Bullet> m_bullets;
@@ -34,6 +36,7 @@ namespace TD{
         void draw(sf::RenderWindow& window) const{
             m_map  .draw(window);
             m_tower.draw(window);
+            m_menu .draw(window);
 
             for(const Attacker& attacker: m_attackers){
                 attacker.draw(window);
@@ -49,6 +52,8 @@ namespace TD{
         }
         sf::Clock m_reload_clock;
         void update(){
+            m_menu.update();
+
             for(Attacker& attacker: m_attackers){
                 attacker.update();
             }
@@ -61,7 +66,7 @@ namespace TD{
    
 
             // Also directly removes the bullet from the vector when it hits an attacker
-            std::erase_if(m_bullets, [&](Bullet& bullet){ return bullet.update(m_attackers); });
+            std::erase_if(m_bullets, [&](Bullet& bullet){ return bullet.update(m_attackers, m_menu); });
         }
 
         void attacker_spawn_routine(){
@@ -79,6 +84,10 @@ namespace TD{
             f.load();
             m_map.set_position_and_size({1,1}, {100,100});
             m_map.create_tiles(f);
+            m_tower.set_postition(m_map.get_route().back());
+            m_tower.configure({80,80}, f);
+
+            m_menu.configure(m_map.get_total_size());
             //m_reload_clock.restart();
 
         }
